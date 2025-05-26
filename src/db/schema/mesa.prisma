@@ -1,0 +1,10 @@
+model Mesa{
+  id String @id @default(cuid())
+  id_cliente String
+  estado String
+
+
+  cliente Cliente @relation(fields: [id_cliente], references: [id])
+
+  @@map("mesas")
+}

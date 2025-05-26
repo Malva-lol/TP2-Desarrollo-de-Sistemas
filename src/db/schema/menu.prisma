@@ -1,0 +1,11 @@
+model PlatoMenu{
+  id String @id @default(cuid())
+  nombre String
+  descripcion String
+  precio Decimal
+
+  pedidos Pedido[]
+  sesiones Sesion[]
+
+  @@map("platos_del_menu")
+}

@@ -1,0 +1,12 @@
+model Pedido{
+  id String @id @default(cuid())
+  id_cliente String
+  title String
+  content String
+  id_user String
+
+
+  cliente Cliente @relation(fields: [id_cliente], references: [id])
+
+  @@map("pedidos")
+}
