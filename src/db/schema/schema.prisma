@@ -1,4 +1,4 @@
-generator client {
+generator user {
   provider = "prisma-client-js"
   output = "../../../node_modules/.prisma/client"
 }

@@ -1,12 +1,13 @@
 model Pedido{
   id String @id @default(cuid())
-  id_cliente String
+  id_usuario String
+  estado String
   title String
-  content String
-  id_user String
+  monto_total Decimal
+  porcentaje_descuento Int
 
-
-  cliente Cliente @relation(fields: [id_cliente], references: [id])
+  usuario Usuario @relation(fields: [id_usuario], references: [id])
+  contenido PlatoMenu[]
 
   @@map("pedidos")
 }

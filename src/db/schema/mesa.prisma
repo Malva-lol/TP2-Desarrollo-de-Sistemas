@@ -1,10 +1,9 @@
 model Mesa{
   id String @id @default(cuid())
-  id_cliente String
+  id_usuario String
   estado String
 
-
-  cliente Cliente @relation(fields: [id_cliente], references: [id])
+  usuario Usuario @relation(fields: [id_usuario], references: [id])
 
   @@map("mesas")
 }

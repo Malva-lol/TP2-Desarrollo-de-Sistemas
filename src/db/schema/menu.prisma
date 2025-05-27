@@ -3,9 +3,9 @@ model PlatoMenu{
   nombre String
   descripcion String
   precio Decimal
+  categoria String
 
   pedidos Pedido[]
-  sesiones Sesion[]
 
   @@map("platos_del_menu")
 }
