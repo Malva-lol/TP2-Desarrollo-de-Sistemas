@@ -1,0 +1,10 @@
+model Sesion{
+  id String @id @default(cuid())
+  id_usuario String
+  session_token String
+  
+  usuario Usuario @relation(fields: [id_usuario], references: [id])
+
+  @@unique([id_usuario, session_token])
+  @@map("sesiones")
+}

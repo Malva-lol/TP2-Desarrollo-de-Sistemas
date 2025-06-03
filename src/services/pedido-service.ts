@@ -1,62 +1,35 @@
 import type { Pedido } from "@prisma/client";
 import { db } from "../db/db";
 
-export class postService {
-	async createPost(post: Pedido) {
-		return await db.post.findMany({
-			include: {
-				user: {
-					select: {
-						name: true,
-						id: true,
-					},
-				},
-				_count: {
-					select: {
-						comments: true,
-					},
-				},
-			},
+export class pedidoService {
+
+	async createPedido(pedido: Pedido) {
+		return await db.pedido.create({
+			data: pedido,
 		});
 	}
 
-	async getPostsByUser(userID: string) {
-		return await db.post.findMany({
+	async getPedidoByUser(usuarioID: string) {
+		return await db.pedido.findMany({
 			where: {
-				id_user: userID,
+				id_usuario: usuarioID,
 			},
 		});
 	}
 
-	async getPostById(postID: string) {
-		return await db.post.findFirst({
+	async getPedidoById(pedidoID: string) {
+		return await db.pedido.findFirst({
 			include: {
-				user: {
+				usuario: {
 					select: {
-						name: true,
 						id: true,
+						nombre: true,
 					},
-				},
-				comments: {
-					include: {
-						user: {
-							select: {
-								name: true,
-								id: true,
-							},
-						},
-					},
-				},
+				}
 			},
 			where: {
-				id: postID,
+				id: pedidoID,
 			},
-		});
-	}
-
-	async createComment(post: Pedido) {
-		return await db.post.create({
-			data: post,
 		});
 	}
 }
