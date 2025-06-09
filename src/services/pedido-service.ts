@@ -3,6 +3,10 @@ import { db } from "../db/db";
 
 export class pedidoService {
 
+	async getPedidos(){
+		return await db.mesa.findMany();
+	}
+
 	async createPedido(pedido: Pedido) {
 		return await db.pedido.create({
 			data: pedido,

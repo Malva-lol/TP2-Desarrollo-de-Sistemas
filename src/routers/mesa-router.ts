@@ -1,54 +1,52 @@
 import express from "express";
 import {
-	createPost,
-	getPostById,
-	getPosts,
-	getPostsByUser,
+	createMesa,
+	getMesaById,
+	getMesas,
+	getMesasByUser,
 } from "../services/mesa-service";
 import { isAuth } from "../utils/auth";
 
-export const postRouter = express.Router();
+export const mesaRouter = express.Router();
 
-postRouter.get("/", async (req, res) => {
+mesaRouter.get("/", async (req, res) => {
 	try {
-		const posts = await getPosts();
-		res.json({ posts: posts });
+		const mesas = await getMesas();
+		res.json({ mesas: mesas });
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error skibidi" });
 	}
 });
 
-postRouter.get("/user/:id", async (req, res) => {
+mesaRouter.get("/user/:id", async (req, res) => {
 	try {
 		const id_user = req.params.id;
-		const posts = await getPostsByUser(id_user);
-		res.json({ posts: posts });
+		const mesas = await getMesasByUser(id_user);
+		res.json({ mesas: mesas });
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error skibidi" });
 	}
 });
 
-postRouter.get("/:id", async (req, res) => {
+mesaRouter.get("/:id", async (req, res) => {
 	try {
 		const id = req.params.id;
-		const post = await getPostById(id);
-		if (post) {
-			res.json(post);
+		const mesa = await getMesaById(id);
+		if (mesa) {
+			res.json(mesa);
 		} else {
-			res.status(404).json({ error: "Post not found" });
+			res.status(404).json({ error: "Mesa not found" });
 		}
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error sigma" });
 	}
 });
 
-postRouter.post("/", isAuth, async (req, res) => {
+mesaRouter.post("/", isAuth, async (req, res) => {
 	try {
-		const post_body = req.body;
+		const mesa_body = req.body;
 		const user = req.context?.user;
-		const post = await createPost({ id_user: user.id as string, ...post_body });
-		res.json({ post: post });
+		const mesa = await createMesa({ id_user: user.id as string, ...mesa_body });
+		res.json({ mesa: mesa });
 	} catch (error) {}
 });
-
-// postRouter.post('/id/comment', async (req, res) => { | crear comentario
