@@ -1,11 +1,12 @@
 import express from "express";
-import { getUserById, getUsers } from "../services/user-service";
+import { userService } from "../services/user-service";
 
 export const userRouter = express.Router();
+const userService1 = new userService()
 
 userRouter.get("/", async (req, res) => {
 	try {
-		const users = await getUsers();
+		const users = await userService1.getUsuarios();
 		res.json({ users: users });
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error toilet" });
@@ -14,7 +15,6 @@ userRouter.get("/", async (req, res) => {
 
 userRouter.post("/", async (req, res) => {
 	try {
-		console.log(req.body);
 		res.status(201).send(req.body);
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error" });
@@ -24,7 +24,7 @@ userRouter.post("/", async (req, res) => {
 userRouter.get("/:id", async (req, res) => {
 	try {
 		const id = req.params.id;
-		const user = await getUserById(id);
+		const user = await userService1.getUsuarioById(id);
 		if (user) {
 			res.json(user);
 		} else {
