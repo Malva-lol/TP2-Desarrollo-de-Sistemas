@@ -13,7 +13,7 @@ export class mesaService {
 	};
 
 	async getMesasByUser (userID: string) {
-		return await db.mesa.findMany({
+		return await db.mesa.findFirst({
 			where: {
 				id_usuario: userID,
 			},
