@@ -5,10 +5,8 @@ export class mesaService {
 	async getMesas() {
 		return await db.mesa.findMany({
 			include: {
-				usuario: {
-					select: {
-						id: true,
-					},
+				select: {
+					id: true,
 				},
 			},
 		});
@@ -40,7 +38,9 @@ export class mesaService {
 
 	async createMesa (mesa: Mesa) {
 		return await db.mesa.create({
-			data: mesa,
+			id: mesa.id,
+			id_usuario: mesa.id_usuario,
+			estado: mesa.estado,
 		});
 	};
 }

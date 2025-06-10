@@ -13,14 +13,6 @@ userRouter.get("/", async (req, res) => {
 	}
 });
 
-userRouter.post("/", async (req, res) => {
-	try {
-		res.status(201).send(req.body);
-	} catch (error) {
-		res.status(500).json({ error: "Internal server error" });
-	}
-});
-
 userRouter.get("/:id", async (req, res) => {
 	try {
 		const id = req.params.id;
