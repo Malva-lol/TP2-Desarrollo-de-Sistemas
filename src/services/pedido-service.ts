@@ -1,14 +1,14 @@
-import type { Pedido, PlatoMenu } from "@prisma/client";
-import { db } from "../db/db";
+import { Prisma, type Pedido, type PlatoMenu } from "@prisma/client";
+import { bd } from "../bd/bd";
 
 export class pedidoService {
 
-	async getPedidos(){
-		return await db.mesa.findMany();
+	async getPedidos() {
+		return await bd.mesa.findMany();
 	}
 
 	async createPedido(pedido: Pedido & { contenido: { id: string }[] }) {
-		const platos = await db.platoMenu.findMany({
+		const platos = await bd.platoMenu.findMany({
 			where: {
 				id: {
 					in: pedido.contenido.map(p => p.id),
@@ -21,7 +21,7 @@ export class pedidoService {
 
 		const montoTotal = platos.reduce((acc, plato) => acc + parseFloat(plato.precio.toString()), 0);
 
-		const usuario = await db.usuario.findUnique({
+		const usuario = await bd.usuario.findUnique({
 			where: { id: pedido.id_usuario },
 			select: { cant_pedidos: true },
 		});
@@ -39,7 +39,7 @@ export class pedidoService {
 
 		const montoConDescuento = montoTotal * (1 - porcentajeDescuento / 100);
 
-		return await db.pedido.create({
+		return await bd.pedido.create({
 			data: {
 				id_usuario: pedido.id_usuario,
 				estado: pedido.estado,
@@ -55,7 +55,7 @@ export class pedidoService {
 
 
 	async getPedidoByUser(usuarioID: string) {
-		return await db.pedido.findMany({
+		return await bd.pedido.findMany({
 			where: {
 				id_usuario: usuarioID,
 			},
@@ -63,7 +63,7 @@ export class pedidoService {
 	}
 
 	async getPedidoById(pedidoID: string) {
-		return await db.pedido.findFirst({
+		return await bd.pedido.findFirst({
 			include: {
 				usuario: {
 					select: {

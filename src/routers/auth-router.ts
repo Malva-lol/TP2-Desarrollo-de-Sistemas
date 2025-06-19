@@ -9,9 +9,9 @@ const userVerificationService1 = new userVerificationService()
 authRouter.post("/register", async (req, res) => {
 	try {
 		const { body } = req;
-		const { nombre, telefono,email, contrasena, direccion } = body;
+		const { nombre, telefono, email, contrasena, direccion, Nivel } = body;
 		const password_hash = contrasena; // it doesn't hash at all :v
-		const user = await userService1.createUsuario( nombre, telefono, email, password_hash, false, direccion, 0);
+		const user = await userService1.createUsuario(nombre, telefono, email, password_hash, false, direccion, 0, Nivel);
 		if (!user) throw new Error("No se creo el usuario :3");
 		res.status(201).json({ data: user.id });
 	} catch (error) {
@@ -22,7 +22,7 @@ authRouter.post("/register", async (req, res) => {
 authRouter.post("/login", async (req, res) => {
 	try {
 		const { body } = req;
-		const { email, contrasena	} = body;
+		const { email, contrasena } = body;
 		const user = await userVerificationService1.verifyUser(email, contrasena);
 		const session_token = userVerificationService1.generateUserSession(user.id);
 		res.status(200).json({ data: session_token });

@@ -1,27 +1,21 @@
 import type { Mesa } from "@prisma/client";
-import { db } from "../db/db";
+import { bd } from "../bd/bd";
 
 export class mesaService {
 	async getMesas() {
-		return await db.mesa.findMany({
-			include: {
-				select: {
-					id: true,
-				},
-			},
-		});
+		return await bd.mesa.findMany();
 	};
 
-	async getMesasByUser (userID: string) {
-		return await db.mesa.findFirst({
+	async getMesasByUser(userID: string) {
+		return await bd.mesa.findFirst({
 			where: {
 				id_usuario: userID,
 			},
 		});
 	};
 
-	async getMesaById (MesaID: string) {
-		return await db.mesa.findFirst({
+	async getMesaById(MesaID: string) {
+		return await bd.mesa.findFirst({
 			include: {
 				usuario: {
 					select: {
@@ -36,11 +30,13 @@ export class mesaService {
 		});
 	};
 
-	async createMesa (mesa: Mesa) {
-		return await db.mesa.create({
-			id: mesa.id,
-			id_usuario: mesa.id_usuario,
-			estado: mesa.estado,
+	async createMesa(mesa: Mesa) {
+		return await bd.mesa.create({
+			data: {
+				id_usuario: mesa.id_usuario,
+				estado: mesa.estado,
+			},
 		});
-	};
+	}
+
 }

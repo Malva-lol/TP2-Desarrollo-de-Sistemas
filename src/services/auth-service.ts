@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
-import { db } from "../db/db";
+import { bd } from "../bd/bd";
 import { userService } from "./user-service";
 const userSvc = new userService();
 
 export class userVerificationService {
 
-	async verifyUser(email: string, password: string) {	
-		const user = await userSvc.getUserByEmail(email);
-		const is_match = (password == user.password);
+	async verifyUser(email: string, password: string) {
+		const user = await userSvc.getUsuarioByEmail(email);
+		const is_match = (password == user.contrasena);
 		if (!is_match) {
 			throw new Error("La contraseña no coincide aprende a escribir :v");
 		}
@@ -17,8 +17,8 @@ export class userVerificationService {
 	async generateUserSession(id_user: string) {
 		const session_token = randomUUID();
 		try {
-			await db.session.create({
-				data: { id_user, session_token },
+			await bd.sesion.create({
+				data: { id_usuario: id_user, session_token },
 			});
 			return session_token;
 		} catch (error) {
@@ -28,9 +28,9 @@ export class userVerificationService {
 }
 
 export const getUserBySessionToken = async (session_token: string) => {
-	const user = db.user.findFirst({
+	const user = bd.usuario.findFirst({
 		where: {
-			sessions: {
+			sesiones: {
 				some: { session_token },
 			},
 		},

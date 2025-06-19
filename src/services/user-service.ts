@@ -1,13 +1,13 @@
 import type { Usuario } from "@prisma/client";
-import { db } from "../db/db";
-	
+import { bd } from "../bd/bd";
+
 export class userService {
 	async getUsuarios() {
-		return await db.usuario.findMany();
+		return await bd.usuario.findMany({});
 	}
 
 	async getUsuarioById(userID: string) {
-		return await db.usuario.findFirst({
+		return await bd.usuario.findFirst({
 			where: {
 				id: userID,
 			},
@@ -15,13 +15,13 @@ export class userService {
 	}
 
 	async getUsuarioByEmail(email: string) {
-		const user = await db.usuario.findFirst({
+		const user = await bd.usuario.findFirst({
 			where: {
 				email: email,
 			},
 		});
 		if (!user) {
-			throw new Error("No hay usuario con el email/nombre dado :3");
+			throw new Error("No hay usuario con el email/nombre dado");
 		}
 		return user;
 	}
@@ -33,23 +33,25 @@ export class userService {
 		contrasena: string,
 		es_admin: boolean,
 		direccion: string,
-		cant_pedidos: number
-		) {
+		cant_pedidos: number,
+		Nivel: string
+	) {
 		try {
-			const user = await db.usuario.create({
-			data: {
-				nombre,
-				telefono,
-				email,
-				contrasena,
-				es_admin,
-				direccion,
-				cant_pedidos,
-			},
+			const user = await bd.usuario.create({
+				data: {
+					nombre,
+					telefono,
+					email,
+					contrasena,
+					es_admin,
+					direccion,
+					cant_pedidos,
+					Nivel,
+				},
 			});
 			return user;
 		} catch (error) {
-			throw new Error("Error al crear el usuario :c");
+			throw new Error("Error al crear el usuario");
 		}
 	}
 }

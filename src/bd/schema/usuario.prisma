@@ -1,0 +1,17 @@
+model Usuario {
+  id           String  @id @default(cuid())
+  nombre       String
+  telefono     String
+  email        String  @unique
+  contrasena   String
+  es_admin     Boolean
+  direccion    String
+  cant_pedidos Int
+  Nivel        String
+
+  pedidos  Pedido[]
+  sesiones Sesion[]
+  mesas    Mesa[]
+
+  @@map("usuario")
+}
