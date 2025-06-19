@@ -16,6 +16,7 @@ export class userVerificationService {
 
 	async generateUserSession(id_user: string) {
 		const session_token = randomUUID();
+		console.log(session_token);
 		try {
 			await bd.sesion.create({
 				data: { id_usuario: id_user, session_token },

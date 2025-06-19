@@ -10,7 +10,7 @@ mesaRouter.get("/", async (req, res) => {
 		const mesas = await mesaService1.getMesas();
 		res.json({ mesas: mesas });
 	} catch (error) {
-		res.status(500).json({ error: "Internal server error skibidi" });
+		res.status(500).json({ error: "Internal server error" });
 	}
 });
 
@@ -20,7 +20,7 @@ mesaRouter.get("/user/:id", async (req, res) => {
 		const mesas = await mesaService1.getMesasByUser(id_user);
 		res.json({ mesas: mesas });
 	} catch (error) {
-		res.status(500).json({ error: "Internal server error skibidi" });
+		res.status(500).json({ error: "Internal server error" });
 	}
 });
 
@@ -34,15 +34,24 @@ mesaRouter.get("/:id", async (req, res) => {
 			res.status(404).json({ error: "Mesa not found" });
 		}
 	} catch (error) {
-		res.status(500).json({ error: "Internal server error sigma" });
+		res.status(500).json({ error: "Internal server error" });
 	}
 });
 
 mesaRouter.post("/", isAuth, async (req, res) => {
 	try {
-		const mesa_body = req.body;
 		const user = req.context?.user;
+		if (user.es_admin == false) {
+			res.status(403).json({ error: "No tienes permisos para crear una mesa" });
+			return;
+		}
+		const mesa_body = req.body;
 		const mesa = await mesaService1.createMesa({ id_user: user.id as string, ...mesa_body });
-		res.json({ mesa: mesa });
-	} catch (error) {}
+		res.status(200).json({ mesa: mesa });
+		return;
+	} catch (error) {
+		res.status(500).json({ error: (error as Error).message });
+	}
 });
+
+// TODO: Poder reservar mesa si sos cliente. Sólo poder reservar mesas que se encuentren disponibles.

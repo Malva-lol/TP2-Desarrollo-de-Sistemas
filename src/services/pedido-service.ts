@@ -23,16 +23,19 @@ export class pedidoService {
 
 		const usuario = await bd.usuario.findUnique({
 			where: { id: pedido.id_usuario },
-			select: { cant_pedidos: true },
+			select: { cant_pedidos: true, Nivel: true },
 		});
 
 		let porcentajeDescuento = 0;
 		if (usuario) {
 			if (usuario.cant_pedidos > 7) {
+				usuario.Nivel = "Top premium";
 				porcentajeDescuento = 50;
 			} else if (usuario.cant_pedidos > 5) {
+				usuario.Nivel = "Premium";
 				porcentajeDescuento = 20;
 			} else if (usuario.cant_pedidos > 3) {
+				usuario.Nivel = "Habitue";
 				porcentajeDescuento = 10;
 			}
 		}
@@ -74,6 +77,17 @@ export class pedidoService {
 			},
 			where: {
 				id: pedidoID,
+			},
+		});
+	}
+
+	async createPlatoMenu(platoMenu: PlatoMenu) {
+		return await bd.platoMenu.create({
+			data: {
+				nombre: platoMenu.nombre,
+				descripcion: platoMenu.descripcion,
+				precio: platoMenu.precio,
+				categoria: platoMenu.categoria,
 			},
 		});
 	}
