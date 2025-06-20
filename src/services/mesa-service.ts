@@ -39,4 +39,22 @@ export class mesaService {
 		});
 	}
 
+	async updateEstadoMesa(id: string, user_id: string, nuevoEstado: string) {
+		return await bd.mesa.update({
+			where: { id: id },
+			data: { id_usuario: user_id, estado: nuevoEstado }
+		});
+	}
+
+	async deleteMesa(id: string) {
+		const mesaExistente = await bd.mesa.findUnique({
+			where: { id },
+		});
+
+		if (!mesaExistente) return null;
+
+		return await bd.mesa.delete({
+			where: { id },
+		});
+	}
 }

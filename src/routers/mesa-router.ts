@@ -54,4 +54,64 @@ mesaRouter.post("/", isAuth, async (req, res) => {
 	}
 });
 
-// TODO: Poder reservar mesa si sos cliente. Sólo poder reservar mesas que se encuentren disponibles.
+// Con este patch, se puede reservar una mesa. Si no es admin, no se puede ocupar una mesa ya ocupada.
+mesaRouter.patch("/:id", isAuth, async (req, res) => {
+	try {
+		const user = req.context?.user;
+		const id = req.params.id;
+		const { estado } = req.body;
+
+		const mesa = await mesaService1.getMesaById(id);
+		if (!mesa) {
+			res.status(404).json({ error: "Mesa no encontrada" });
+			return;
+		}
+
+		if (!user?.es_admin) {
+			if (mesa.estado === "Ocupada") {
+				res.status(400).json({ error: "La mesa ya está ocupada" });
+				return;
+			}
+			const mesaActualizada = await mesaService1.updateEstadoMesa(id, user.id, "Ocupada");
+			res.json({ mesa: mesaActualizada });
+			return;
+		}
+
+		const nuevoEstado = estado || mesa.estado;
+		const mesaActualizada = await mesaService1.updateEstadoMesa(id, user.id, nuevoEstado);
+		res.json({ mesa: mesaActualizada });
+		return;
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: (error as Error).message });
+		return;
+	}
+});
+
+
+mesaRouter.delete("/:id", isAuth, async (req, res) => {
+	try {
+		const id = req.params.id;
+		const user = req.context?.user;
+
+		if (user.es_admin == false) {
+			res.status(403).json({ error: "No tienes permisos para eliminar una mesa" });
+			return;
+		}
+
+		const mesa = await mesaService1.deleteMesa(id);
+
+		if (mesa) {
+			res.json({ mensaje: "Mesa eliminada correctamente", mesa });
+			return;
+		} else {
+			res.status(404).json({ error: "Mesa no encontrada" });
+			return;
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: (error as Error).message });
+		return;
+	}
+});
+

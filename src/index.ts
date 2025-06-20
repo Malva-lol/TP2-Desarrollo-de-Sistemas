@@ -9,13 +9,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Routes
 app.use("/api/usuarios", userRouter);
 app.use("/api/pedidos", pedidoRouter);
 app.use("/api/mesas", mesaRouter);
 app.use("/api/auth", authRouter);
 
-// Health check
 app.get("/health", (req, res) => {
 	try {
 		res.json({ status: "healthy" });
@@ -24,7 +22,6 @@ app.get("/health", (req, res) => {
 	}
 });
 
-// Start server
 app.listen(PORT, () => {
 	console.log(`Server running on http://localhost:${PORT}`);
 });
